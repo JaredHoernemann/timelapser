@@ -18,6 +18,7 @@ public class Main {
     private static final long START_TIME_MILLIS = System.currentTimeMillis();
     private static final String TIMELAPSE_DIR = System.getProperty("user.home") + "\\Timelapse\\" + millisToDateStr(START_TIME_MILLIS) + "\\";
     private static final String DATE_FORMAT = "yyyy-MM-dd HH mm ss a";
+    private static final long TIMELAPSE_INTERVAL_MILLIS = 240000;
 
 
     private static String millisToDateStr(long millis) {
@@ -45,7 +46,7 @@ public class Main {
                 String filePath = TIMELAPSE_DIR + imgName;
                 ImageIO.write(webcam.getImage(), ImageUtils.FORMAT_PNG, new File(filePath));
                 System.out.println("Captured image: " + filePath);
-                Thread.sleep(30000);
+                Thread.sleep(TIMELAPSE_INTERVAL_MILLIS);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
                 run = false;
