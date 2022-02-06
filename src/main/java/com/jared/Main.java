@@ -45,7 +45,7 @@ public class Main {
                 String filePath = TIMELAPSE_DIR + imgName;
                 ImageIO.write(webcam.getImage(), ImageUtils.FORMAT_PNG, new File(filePath));
                 System.out.println("Captured image: " + filePath);
-                Thread.sleep(30000);
+                Thread.sleep(60000);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
                 run = false;
