@@ -16,16 +16,16 @@ public class Main {
 
     private static final Dimension RESOLUTION = new Dimension(1920, 1080);
     private static final long START_TIME_MILLIS = System.currentTimeMillis();
-    private static final String TIMELAPSE_DIR = System.getProperty("user.home") + "\\Timelapse\\" + millisToDateStr(START_TIME_MILLIS) + "\\";
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH mm ss a";
+    private static final String DATE_FORMAT = "yyyy-MM-dd HHmm a ss";
+    private static final String TIMELAPSE_DIR = System.getProperty("user.home") + "\\Timelapse\\" + millisToDateStr(START_TIME_MILLIS, DATE_FORMAT) + "\\";
+    private static final int TIMELAPSE_INTERVAL_MINUTES = 4;
 
-
-    private static String millisToDateStr(long millis) {
+    private static String millisToDateStr(long millis, String format) {
         Instant instant = Instant.ofEpochMilli(millis);
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDateTime ldt = LocalDateTime.ofInstant(instant, zoneId);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         return ldt.format(formatter);
     }
 
@@ -41,12 +41,12 @@ public class Main {
         while (run) {
 
             try {
-                String imgName = System.currentTimeMillis() + ".png";
+                String imgName = millisToDateStr(System.currentTimeMillis(), DATE_FORMAT) + ".png";
                 String filePath = TIMELAPSE_DIR + imgName;
                 ImageIO.write(webcam.getImage(), ImageUtils.FORMAT_PNG, new File(filePath));
                 System.out.println("Captured image: " + filePath);
-                Thread.sleep(60000);
-            } catch (IOException | InterruptedException e) {
+                Utils.sleepForMinutes(TIMELAPSE_INTERVAL_MINUTES);
+            } catch (IOException e) {
                 e.printStackTrace();
                 run = false;
             }
