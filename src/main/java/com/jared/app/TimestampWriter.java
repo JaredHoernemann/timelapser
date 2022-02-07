@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TimestampUtil {
+public class TimestampWriter {
     
     public static String DEFAULT_FORMAT = "MMMM dd: h:mma";
     
@@ -47,13 +47,15 @@ public class TimestampUtil {
             graphics.setColor(Color.RED);
             graphics.drawString(timestamp, 150, 150);
             graphics.dispose();
-            ImageIO.write(bufferedImage, "jpg", file);
+            ImageIO.write(bufferedImage, "png", file);
             System.out.println("Timestamped image: " + file.getName() + " -> " + timestamp);
             return file;
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
     }
+    
+    
     
 
     public static long getLastModifiedMillis(File image) {
