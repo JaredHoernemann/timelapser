@@ -28,9 +28,9 @@ public class Application {
         while (true) {
             
             try {
-                File picture = WebcamUtil.takePicture();
-                File stamped = TimestampWriter.timestampImage(picture);
-                System.out.println(stamped);
+                File pic = WebcamUtil.takePicture();
+                File stamped = TimestampWriter.timestampImage(pic);
+                FileService.moveFile(stamped.getPath(), metadata.getProjectDirectory() + stamped.getName());
             } catch (IllegalStateException e) {
                 System.err.println("Error: Failed to capture image");
             }
@@ -48,6 +48,8 @@ public class Application {
             meta.setProjectName(projectName);
             meta.setIntervalMinutes(INTERVAL_MINUTES);
             meta.setStartTimeMillis(System.currentTimeMillis());
+            meta.setProjectDirectory(dir);
+            
             String json = gson.toJson(meta);
             FileService.writeToFile(json, filePath);
         }

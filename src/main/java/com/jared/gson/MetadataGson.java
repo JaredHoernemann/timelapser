@@ -12,6 +12,17 @@ public class MetadataGson {
     
     @SerializedName("intervalMinutes")
     private int intervalMinutes;
+    
+    @SerializedName("projectDirectory")
+    private String projectDirectory;
+
+    public String getProjectDirectory() {
+        return projectDirectory;
+    }
+
+    public void setProjectDirectory(String projectDirectory) {
+        this.projectDirectory = projectDirectory;
+    }
 
     public long getStartTimeMillis() {
         return startTimeMillis;
