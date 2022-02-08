@@ -36,7 +36,7 @@ public class Application {
                 e.printStackTrace();
                 System.err.println("Error: Failed to capture image");
             }
-            Utils.sleepForMinutes(metadata.getIntervalMinutes());
+            Utils.sleepForMinutes(projectData.getIntervalMinutes());
         }
     }
     
