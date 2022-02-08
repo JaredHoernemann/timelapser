@@ -32,9 +32,10 @@ public class Application {
                 File stamped = TimestampWriter.timestampImage(pic);
                 FileService.moveFile(stamped.getPath(), metadata.getProjectDirectory() + stamped.getName());
             } catch (IllegalStateException e) {
+                e.printStackTrace();
                 System.err.println("Error: Failed to capture image");
             }
-            Utils.sleepForMinutes(INTERVAL_MINUTES);
+            Utils.sleepForMinutes(metadata.getIntervalMinutes());
         }
     }
     

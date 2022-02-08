@@ -117,7 +117,7 @@ public class FileService {
     public static void moveFile(String filePath, String targetPath) {
         try {
             Path temp = Files.move(Paths.get(filePath), Paths.get(targetPath));
-            System.out.println("File moved successfully: " + filePath + " -> " + targetPath);
+            System.out.println("Moved file: " + filePath + " -> " + targetPath);
         } catch (IOException e) {
             e.printStackTrace();
         }

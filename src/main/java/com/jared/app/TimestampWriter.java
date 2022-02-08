@@ -18,7 +18,7 @@ import java.util.List;
 
 public class TimestampWriter {
     
-    public static String DEFAULT_FORMAT = "MMMM dd: h:mma";
+    public static String DEFAULT_FORMAT = "MMMM dd - h:mma";
     
     public static List<File> timestampImages(List<File> files) {
         List<File> timestampedFiles = new ArrayList<>();
@@ -32,20 +32,19 @@ public class TimestampWriter {
     public static File timestampImage(File file) {
         return timestampImage(file, DEFAULT_FORMAT);
     }
-    
-    
+
     public static File timestampImage(File file, String format) {
         try {
             BufferedImage bufferedImage = ImageIO.read(file);
             
-            Font font = new Font("Arial", Font.BOLD, 72);
+            Font font = new Font("Arial", Font.BOLD, 48);
             long millis = getLastModifiedMillis(file);
             String timestamp = Utils.millisToDateStr(millis, format);
             
             Graphics graphics = bufferedImage.getGraphics();
             graphics.setFont(font);
             graphics.setColor(Color.RED);
-            graphics.drawString(timestamp, 150, 150);
+            graphics.drawString(timestamp, 50, 50);
             graphics.dispose();
             ImageIO.write(bufferedImage, "png", file);
             System.out.println("Timestamped image: " + file.getName() + " -> " + timestamp);
