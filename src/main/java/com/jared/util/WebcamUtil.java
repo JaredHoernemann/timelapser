@@ -7,25 +7,32 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 
 public class WebcamUtil {
 
     private static final String DEFAULT_DIRECTORY = "target/webcam-captures/";
     private static final Dimension RESOLUTION = new Dimension(1920, 1080);
-    
-    public static File takePicture() {
-        FileService.ensureDirectoryExists(DEFAULT_DIRECTORY);
+    private static Webcam webcam;
 
-        Webcam webcam = Webcam.getDefault();
-        
+    private static void initWebcam() {
+        webcam = Webcam.getDefault();
+
         if (webcam == null) {
             throw new IllegalStateException("Failed to connect to webcam");
         }
-
         webcam.setCustomViewSizes(RESOLUTION);
         webcam.setViewSize(new Dimension(RESOLUTION));
         webcam.open();
+    }
+
+    public static File takePicture() {
+        FileService.ensureDirectoryExists(DEFAULT_DIRECTORY);
+
+        if (Objects.isNull(webcam)) {
+            initWebcam();
+        }
 
         try {
             String filePath = DEFAULT_DIRECTORY + System.currentTimeMillis() + ".png"; 
