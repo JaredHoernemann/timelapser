@@ -4,7 +4,8 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.file.FileSystemDirectory;
-import com.jared.Utils;
+import com.jared.gson.ProjectDataGson;
+import com.jared.util.Utils;
 
 import javax.imageio.ImageIO;
 
@@ -20,14 +21,7 @@ public class TimestampWriter {
     
     public static String DEFAULT_FORMAT = "MMMM dd - h:mma";
     
-    public static List<File> timestampImages(List<File> files) {
-        List<File> timestampedFiles = new ArrayList<>();
-        for (File f : files) {
-            File temp = timestampImage(f);
-            timestampedFiles.add(temp);
-        }
-        return timestampedFiles;
-    }
+
     
     public static File timestampImage(File file) {
         return timestampImage(file, DEFAULT_FORMAT);
@@ -39,7 +33,8 @@ public class TimestampWriter {
             
             Font font = new Font("Arial", Font.BOLD, 48);
             long millis = getLastModifiedMillis(file);
-            String timestamp = Utils.millisToDateStr(millis, format);
+            String timestamp = Utils.millisToDateStr(millis, format) 
+                    + "     (Day " + calcDaysBetweenMillis(millis, 1642737276840L) + ")";
             
             Graphics graphics = bufferedImage.getGraphics();
             graphics.setFont(font);
@@ -52,6 +47,17 @@ public class TimestampWriter {
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
+    }
+    
+    public static int calcDaysBetweenMillis(long first, long second) {
+        long elapsed = Math.abs(first - second);
+        long millisInDay = 1000 * 60 * 60 * 24;
+        
+        int count = 0;
+        for (long x = elapsed; x>=millisInDay; x-=millisInDay) {
+            count++;
+        }
+        return count;
     }
     
     
