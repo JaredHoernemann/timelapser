@@ -30,10 +30,25 @@ public class FileService {
     }
 
     public static File copyFile(File original) {
-        FileService.ensureDirectoryExists(COPIED_FILES_DIR);
-
         try {
-            String filePath = COPIED_FILES_DIR + original.getName();
+            String tmpDir = Files.createTempDirectory("timelapse").toFile().getAbsolutePath() + "/";
+            System.out.println(tmpDir);
+            return copyFile(original, tmpDir, "");
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
+    
+    public static File copyFile(File original, String toDir, String name) {
+        FileService.ensureDirectoryExists(toDir);
+
+        String filePath;
+        try {
+            if (name.isEmpty()) {
+                filePath = toDir + original.getName();
+            } else {
+                filePath = toDir + name;
+            }
             File copy = new File(filePath);
             FileUtils.copyFile(original, copy);
             System.out.println("Copied file: " + copy.getName());
@@ -114,10 +129,10 @@ public class FileService {
         return empty;
     }
 
-    public static void moveFile(String filePath, String targetPath) {
+    public static void moveFile(String source, String target) {
         try {
-            Path temp = Files.move(Paths.get(filePath), Paths.get(targetPath));
-            System.out.println("Moved file: " + filePath + " -> " + targetPath);
+            Path temp = Files.move(Paths.get(source), Paths.get(target));
+            System.out.println("Moved file: " + source + " -> " + target);
         } catch (IOException e) {
             e.printStackTrace();
         }
