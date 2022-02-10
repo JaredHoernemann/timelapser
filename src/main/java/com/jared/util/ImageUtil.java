@@ -32,7 +32,7 @@ public class ImageUtil {
             Graphics graphics = bufferedImage.getGraphics();
             graphics.setFont(font);
             graphics.setColor(Color.RED);
-            graphics.drawString(timestamp, 50, 500);
+            graphics.drawString(timestamp, 50, 200);
             graphics.dispose();
             ImageIO.write(bufferedImage, "png", file);
             System.out.println("Timestamped image: " + file.getName() + " -> " + timestamp);

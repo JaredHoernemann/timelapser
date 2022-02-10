@@ -10,12 +10,12 @@ public class FFMpegUtil {
 
     private static final String OUTPUT_DIR = "target/mp4/";
     private static final String FORMAT = "%09d";
-    private static final int FRAME_RATE = 90;
+    private static final int FRAME_RATE = 60;
 
     private FFMpegUtil() {
     }
 
-    public static File createTimelapse(File[] files, String projectName) {
+    public static void createTimelapse(File[] files, String projectName) {
         FileService.ensureDirectoryExists(OUTPUT_DIR);
         Arrays.sort(files, Comparator.comparingLong(File::lastModified));
 
@@ -28,12 +28,15 @@ public class FFMpegUtil {
 
         int count = 1;
         for (File f : files) {
-            String name = "image-" + String.format(FORMAT, count) + ".png";
-            File copy = FileService.copyFile(f, tempDir, name);
-            ImageUtil.timestampImage(copy, ImageUtil.DEFAULT_FORMAT);
-            count++;
+            if (ImageUtil.lightsAreOn(f)) {
+                String name = "image-" + String.format(FORMAT, count) + ".PNG";
+                File copy = FileService.copyFile(f, tempDir, name);
+                ImageUtil.timestampImage(copy, ImageUtil.DEFAULT_FORMAT);
+                count++;
+            }
         }
         FileService.deleteAllFilesInDirectory(OUTPUT_DIR);
+        projectName = projectName.replace(" ", "-");
         String filePath = OUTPUT_DIR + projectName + ".mp4";
 
         String command = "ffmpeg -framerate " + FRAME_RATE + " -i \"" + tempDir + "image-" + FORMAT + ".png\" " +
@@ -41,6 +44,5 @@ public class FFMpegUtil {
         CommandUtils.executeCommandLogToFile(command, "ffmpeg.txt");
         File file = new File(filePath);
         System.out.println("Created timelapse: " + file.getAbsolutePath());
-        return file;
     }
 }

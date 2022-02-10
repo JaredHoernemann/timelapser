@@ -9,7 +9,8 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) {
-        Application.main(args);
+        Application.createTimelapse();
+//        Application.main(args);
 
 //        List<File> list = FileService.getAllFilesInDirectory("C:\\Users\\jared\\Desktop\\Pics");
 //        File[] files = new File[list.size()];
