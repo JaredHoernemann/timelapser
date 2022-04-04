@@ -32,25 +32,9 @@ public class ImageUtil {
             Graphics graphics = bufferedImage.getGraphics();
             Font font = new Font("Arial", Font.BOLD, 48);
             graphics.setFont(font);
-            graphics.setColor(Color.WHITE);
-            
-            Graphics2D graphics2D = (Graphics2D) graphics;
-            AffineTransform transform = graphics2D.getTransform();
-            transform.translate(25, 75);
-            graphics2D.transform(transform);
-            graphics2D.setColor(Color.BLACK);
-            FontRenderContext frc = graphics2D.getFontRenderContext();
-            TextLayout tl= new TextLayout(text, graphics.getFont().deriveFont(45F), frc);
-            Shape shape = tl.getOutline(null);
-            graphics2D.setStroke(new BasicStroke(15f));
-            graphics2D.draw(shape);
-            graphics2D.setColor(Color.white);
-            graphics2D.fill(shape);
-            
-            
-//            graphics.drawString(text, 25, 150);
-//            graphics.dispose();
-//            
+            graphics.setColor(Color.RED);
+            graphics.drawString(timestamp, 50, 200);
+            graphics.dispose();
             ImageIO.write(bufferedImage, "png", file);
             System.out.println("Timestamped image: " + file.getName() + " -> " + text);
             return file;

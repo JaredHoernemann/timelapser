@@ -10,6 +10,7 @@ import com.jared.camera.WebcamService;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("ALL")
 public class Application {
@@ -22,14 +23,24 @@ public class Application {
     private static ProjectDataGson projectData = null;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static File createTimelapse() {
+    public static void compileTimelapse() {
         initialize(APPLE_FRITTER);
         List<File> files = FileService.getAllFilesInDirectory(projectData.getProjectDirectory());
-        File[] array = new File[files.size()];
-        files.toArray(array);
-        return   TimelapseUtil.createTimelapse(array, projectData.getProjectName());
+        List<File> justThePics = files.stream()
+                .filter(f -> f.getName().endsWith(".png") || f.getName().endsWith(".jpg"))
+                .collect(Collectors.toList());
+
+
+        System.out.println("Files: " + files.size());
+        System.out.println("Pictures: " + justThePics.size());
+        justThePics = justThePics.subList((justThePics.size() - 1080), justThePics.size()); //360 * 4 = 1440 minutes in a day
+
+
+        File[] array = new File[justThePics.size()];
+        justThePics.toArray(array);
+        FFMpegUtil.createTimelapse(array, projectData.getProjectName());
     }
-    
+
 
     public static void main(String[] args) {
         initialize(APPLE_FRITTER);
