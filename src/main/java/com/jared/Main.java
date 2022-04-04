@@ -1,16 +1,12 @@
 package com.jared;
 
 import com.jared.app.Application;
-import com.jared.util.FileService;
-import com.jared.util.ImageUtil;
-
-import java.io.File;
 
 public class Main {
 
     public static void main(String[] args) {
-        Application.createTimelapse();
-//        Application.main(args);
+        Application.compileTimelapse();
+        Application.main(args);
 
 //        List<File> list = FileService.getAllFilesInDirectory("C:\\Users\\jared\\Desktop\\Pics");
 //        File[] files = new File[list.size()];

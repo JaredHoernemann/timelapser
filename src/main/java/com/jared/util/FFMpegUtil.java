@@ -10,7 +10,7 @@ public class FFMpegUtil {
 
     private static final String OUTPUT_DIR = "target/mp4/";
     private static final String FORMAT = "%09d";
-    private static final int FRAME_RATE = 60;
+    private static final int FRAME_RATE = 18;
 
     private FFMpegUtil() {
     }
