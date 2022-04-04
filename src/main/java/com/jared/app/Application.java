@@ -3,10 +3,10 @@ package com.jared.app;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jared.gson.ProjectDataGson;
-import com.jared.util.FFMpegUtil;
+import com.jared.util.TimelapseUtil;
 import com.jared.util.FileService;
 import com.jared.util.Utils;
-import com.jared.util.WebcamUtils;
+import com.jared.camera.WebcamService;
 
 import java.io.File;
 import java.util.List;
@@ -27,7 +27,7 @@ public class Application {
         List<File> files = FileService.getAllFilesInDirectory(projectData.getProjectDirectory());
         File[] array = new File[files.size()];
         files.toArray(array);
-        return   FFMpegUtil.createTimelapse(array, projectData.getProjectName());
+        return   TimelapseUtil.createTimelapse(array, projectData.getProjectName());
     }
     
 
@@ -39,7 +39,7 @@ public class Application {
     private static void loop() {
         while (true) {
             try {
-                File file = WebcamUtils.takePicture(projectData.getProjectDirectory());
+                File file = WebcamService.takePicture(projectData.getProjectDirectory());
             } catch (IllegalStateException e) {
                 System.err.println("Error: Failed to take picture -> " + e.getMessage());
                 e.printStackTrace();

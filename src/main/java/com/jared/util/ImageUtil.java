@@ -7,6 +7,9 @@ import com.drew.metadata.file.FileSystemDirectory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +17,7 @@ import java.util.Date;
 
 public class ImageUtil {
 
-    public static String DEFAULT_FORMAT = "MMMM dd - hh:mma";
+    public static String DEFAULT_FORMAT = "hh:mma";
 
     public static File timestampImage(File file) {
         return timestampImage(file, DEFAULT_FORMAT);
@@ -22,20 +25,34 @@ public class ImageUtil {
 
     public static File timestampImage(File file, String format) {
         try {
-            BufferedImage bufferedImage = ImageIO.read(file);
-
-            Font font = new Font("Arial", Font.BOLD, 48);
             long millis = getLastModifiedMillis(file);
-            String timestamp = Utils.millisToDateStr(millis, format)
-                    + "     (Day " + calcDaysBetweenMillis(millis, 1642737276840L) + ")";
+            String text = "Day " + calcDaysBetweenMillis(millis, 1642737276840L) + " - " + Utils.millisToDateStr(millis, format);
 
+            BufferedImage bufferedImage = ImageIO.read(file);
             Graphics graphics = bufferedImage.getGraphics();
+            Font font = new Font("Arial", Font.BOLD, 48);
             graphics.setFont(font);
-            graphics.setColor(Color.RED);
-            graphics.drawString(timestamp, 50, 500);
-            graphics.dispose();
+            graphics.setColor(Color.WHITE);
+            
+            Graphics2D graphics2D = (Graphics2D) graphics;
+            AffineTransform transform = graphics2D.getTransform();
+            transform.translate(25, 75);
+            graphics2D.transform(transform);
+            graphics2D.setColor(Color.BLACK);
+            FontRenderContext frc = graphics2D.getFontRenderContext();
+            TextLayout tl= new TextLayout(text, graphics.getFont().deriveFont(45F), frc);
+            Shape shape = tl.getOutline(null);
+            graphics2D.setStroke(new BasicStroke(15f));
+            graphics2D.draw(shape);
+            graphics2D.setColor(Color.white);
+            graphics2D.fill(shape);
+            
+            
+//            graphics.drawString(text, 25, 150);
+//            graphics.dispose();
+//            
             ImageIO.write(bufferedImage, "png", file);
-            System.out.println("Timestamped image: " + file.getName() + " -> " + timestamp);
+            System.out.println("Timestamped image: " + file.getName() + " -> " + text);
             return file;
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
@@ -54,7 +71,7 @@ public class ImageUtil {
     }
 
 
-    public static long getLastModifiedMillis(File image) {
+    private static long getLastModifiedMillis(File image) {
         Metadata metadata = getMetaData(image);
         FileSystemDirectory directory = metadata.getFirstDirectoryOfType(FileSystemDirectory.class); //FileSystemDirectory contains Last Modified metadata
         Date date = directory.getDate(3); //type 3 = Last Modified Date
@@ -71,7 +88,7 @@ public class ImageUtil {
     }
 
 
-    public static boolean lightsAreOn(File file) {
+    public static boolean isLightOn(File file) {
         int x;
         int pixel;
 
@@ -88,7 +105,6 @@ public class ImageUtil {
                 b = getBlue(pixel);
 
                 if (r > 50 || g > 50 || b > 50) {
-                    System.out.println(file.getName() + " -> Lights are on");
                     return true;
                 }
             }

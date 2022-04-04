@@ -61,7 +61,8 @@ public class CommandUtils {
         try {
             Process process = processBuilder.start();
             process.getOutputStream();
-        } catch (IOException ioException) {
+            process.waitFor(); //wait for the process to finish before continuing
+        } catch (IOException | InterruptedException ioException) {
             ioException.printStackTrace();
         }
     }
