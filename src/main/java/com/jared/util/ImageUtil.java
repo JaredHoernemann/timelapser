@@ -33,7 +33,7 @@ public class ImageUtil {
             Font font = new Font("Arial", Font.BOLD, 48);
             graphics.setFont(font);
             graphics.setColor(Color.RED);
-            graphics.drawString(timestamp, 50, 200);
+            graphics.drawString(text, 25, 25);
             graphics.dispose();
             ImageIO.write(bufferedImage, "png", file);
             System.out.println("Timestamped image: " + file.getName() + " -> " + text);
@@ -89,6 +89,7 @@ public class ImageUtil {
                 b = getBlue(pixel);
 
                 if (r > 50 || g > 50 || b > 50) {
+                    System.out.println(file.getName() + " -> Lights are on");
                     return true;
                 }
             }

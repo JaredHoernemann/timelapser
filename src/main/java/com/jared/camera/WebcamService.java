@@ -3,6 +3,7 @@ package com.jared.camera;
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.util.ImageUtils;
 import com.jared.util.FileService;
+import com.jared.util.Utils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -38,6 +39,11 @@ public class WebcamService {
 
         if (Objects.isNull(webcam)) {
             initWebcam();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         try {

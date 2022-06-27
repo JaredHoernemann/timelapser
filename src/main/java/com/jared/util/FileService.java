@@ -1,5 +1,6 @@
 package com.jared.util;
 
+import com.google.common.base.Strings;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -39,19 +40,19 @@ public class FileService {
         }
     }
     
-    public static File copyFile(File original, String toDir, String name) {
+    public static File copyFile(File original, String toDir, String toName) {
         FileService.ensureDirectoryExists(toDir);
 
         String filePath;
         try {
-            if (name.isEmpty()) {
+            if (Strings.isNullOrEmpty(toName)) {
                 filePath = toDir + original.getName();
             } else {
-                filePath = toDir + name;
+                filePath = toDir + toName;
             }
             File copy = new File(filePath);
             FileUtils.copyFile(original, copy);
-            System.out.println("Copied file: " + copy.getName());
+            System.out.println("Copied file " + original.getName() + " to: " + copy.getAbsolutePath());
             return copy;
         } catch (IOException e) {
             e.printStackTrace();
