@@ -33,7 +33,7 @@ public class ImageUtil {
             Font font = new Font("Arial", Font.BOLD, 48);
             graphics.setFont(font);
             graphics.setColor(Color.RED);
-            graphics.drawString(timestamp, 50, 200);
+            graphics.drawString(text, 50, 200);
             graphics.dispose();
             ImageIO.write(bufferedImage, "png", file);
             System.out.println("Timestamped image: " + file.getName() + " -> " + text);

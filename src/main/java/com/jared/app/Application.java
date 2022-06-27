@@ -38,7 +38,7 @@ public class Application {
 
         File[] array = new File[justThePics.size()];
         justThePics.toArray(array);
-        FFMpegUtil.createTimelapse(array, projectData.getProjectName());
+        TimelapseUtil.createTimelapse(array, projectData.getProjectName());
     }
 
 
