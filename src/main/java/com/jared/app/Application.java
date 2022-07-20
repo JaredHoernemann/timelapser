@@ -3,18 +3,12 @@ package com.jared.app;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jared.gson.ProjectDataGson;
-import com.jared.util.ImageUtil;
-import com.jared.util.TimelapseUtil;
-import com.jared.util.FileService;
+import com.jared.util.ImageUtils;
+import com.jared.util.FileUtils;
 import com.jared.util.Utils;
 import com.jared.camera.WebcamService;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("ALL")
 public class Application {
@@ -28,41 +22,35 @@ public class Application {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void compileTimelapse(int numDays) {
-        initialize(APPLE_FRITTER);
-//        List<File> files = FileService.getAllFilesInDirectory(projectData.getProjectDirectory());
-        List<File> files = FileService.getAllFilesInDirectory("C:\\Users\\Jared\\Timelapse\\70D test");
-        List<File> justThePics = files.stream()
-                .filter(f -> f.getName().endsWith(".png") || f.getName().endsWith(".jpg") || f.getName().endsWith("JPG"))
-                .collect(Collectors.toList());
-
+//        initialize(APPLE_FRITTER);
+//        List<File> dirOne = FileUtils.getAllFilesInDirectory("C:\\Users\\Jared\\Timelapse\\70DTest2");
+//        List<File> dirTwo = FileUtils.getAllFilesInDirectory("C:\\Users\\Jared\\Timelapse\\70DTest3");
+//        List<File> files = new ArrayList<>();
+//        files.addAll(dirOne);
+//        files.addAll(dirTwo);
+//        List<File> justThePics = files.stream()
+//                .filter(f -> f.getName().endsWith(".png") || f.getName().endsWith(".jpg") || f.getName().endsWith("JPG"))
+//                .collect(Collectors.toList());
 //
-//        List<File> justLightsOn = new ArrayList<>();
-//        for (File f : justThePics) {
-//            if (ImageUtil.isLightOn(f)) {
-//                justLightsOn.add(f);
-//            }
+//        /*
+//        sort files by last modified
+//         */
+//        File[] sortedArray = new File[justThePics.size()];
+//        justThePics.toArray(sortedArray);
+//        Arrays.sort(sortedArray, Comparator.comparingLong(File::lastModified));
+//
+//        List<File> sortedList = Arrays.asList(sortedArray);
+//
+//        int numPicsToInclude = numDays * (1440 / TAKE_PIC_INTERVAL_MINS); //1440 minutes in a day
+//
+//        if (sortedList.size() >= numPicsToInclude) {
+//            sortedList = sortedList.subList((sortedList.size() - (numPicsToInclude)), sortedList.size()); //360 * 4 = 1440 minutes in a day
 //        }
-
-
-        /*
-        sort files by last modified
-         */
-        File[] sortedArray = new File[justThePics.size()];
-        justThePics.toArray(sortedArray);
-        Arrays.sort(sortedArray, Comparator.comparingLong(File::lastModified));
-
-        List<File> sortedList = Arrays.asList(sortedArray);
-
-        int numPicsToInclude = numDays * (1440 / TAKE_PIC_INTERVAL_MINS); //1440 minutes in a day
-
-        if (sortedList.size() >= numPicsToInclude) {
-            sortedList = sortedList.subList((sortedList.size() - (numPicsToInclude)), sortedList.size()); //360 * 4 = 1440 minutes in a day
-        }
-
-
-        File[] finalArray = new File[sortedList.size()];
-        sortedList.toArray(finalArray);
-        TimelapseUtil.createTimelapse(finalArray, projectData.getProjectName());
+//
+//
+//        File[] finalArray = new File[sortedList.size()];
+//        sortedList.toArray(finalArray);
+//        TimelapseUtil.createTimelapse(finalArray);
     }
 
 
@@ -75,7 +63,7 @@ public class Application {
         while (true) {
             try {
                 File file = WebcamService.takePicture(projectData.getProjectDirectory());
-                if (!ImageUtil.isLightOn(file)) {
+                if (!ImageUtils.isLightOn(file)) {
                     System.out.println("Lights are off, deleting file: " + file.getName());
                     file.delete();
 
@@ -90,7 +78,7 @@ public class Application {
 
     private static void initialize(String projectName) {
         String dir = BASE_OUTPUT_DIR + projectName + "\\";
-        FileService.ensureDirectoryExists(dir);
+        FileUtils.ensureDirectoryExists(dir);
         String filePath = dir + METADATA_TXT;
 
         if (!ProjectDataUtil.hasProjectData(dir)) {
@@ -102,10 +90,10 @@ public class Application {
             meta.setSproutDateMillis(AF_SPROUT_MILLIS);
 
             String json = gson.toJson(meta);
-            FileService.writeToFile(json, filePath);
+            FileUtils.writeToFile(json, filePath);
         }
 
-        String json = FileService.readFileAsString(filePath);
+        String json = FileUtils.readFileAsString(filePath);
         projectData = gson.fromJson(json, ProjectDataGson.class);
         System.out.println(json);
     }
@@ -113,7 +101,7 @@ public class Application {
 
     public static int countPngFiles(String dir) {
         int count = 0;
-        for (File f : FileService.getAllFilesInDirectory(dir)) {
+        for (File f : FileUtils.getAllFilesInDirectory(dir)) {
             boolean isPng = false;
             try {
                 String subStr = f.getName().substring(f.getName().length() - 4);

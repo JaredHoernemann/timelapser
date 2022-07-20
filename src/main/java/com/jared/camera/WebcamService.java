@@ -2,8 +2,7 @@ package com.jared.camera;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.util.ImageUtils;
-import com.jared.util.FileService;
-import com.jared.util.Utils;
+import com.jared.util.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -35,7 +34,7 @@ public class WebcamService {
     }
     
     public static File takePicture(String toDir) {
-        FileService.ensureDirectoryExists(toDir);
+        FileUtils.ensureDirectoryExists(toDir);
 
         if (Objects.isNull(webcam)) {
             initWebcam();

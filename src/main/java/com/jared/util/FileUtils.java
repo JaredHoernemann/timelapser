@@ -1,7 +1,6 @@
 package com.jared.util;
 
 import com.google.common.base.Strings;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,17 +8,15 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class FileService {
+public class FileUtils {
 
-    private static final String COPIED_FILES_DIR = "target/copied-files/";
+    private static final long ONE_HOUR_MILLIS = 3600000; //num millis in one hour
 
     public static List<File> copyFiles(List<File> originalFiles) {
         List<File> copies = new ArrayList<>();
@@ -28,6 +25,46 @@ public class FileService {
             copies.add(c);
         }
         return copies;
+    }
+
+    public static String createTempDirectory(String prefix) {
+        try {
+            return Files.createTempDirectory("timelapse").toFile().getAbsolutePath() + "/";
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
+
+    public static List<File> filterOnlyPictures(List<File> files) {
+        return files.stream()
+                .filter(f -> f.getName().endsWith(".png")
+                        || f.getName().endsWith(".jpg")
+                        || f.getName().endsWith("JPG")
+                        || f.getName().endsWith("PNG"))
+                .collect(Collectors.toList());
+    }
+
+    public static List<File> sortFilesByLastModified(List<File> files) {
+        /*
+        sort files by last modified
+         */
+        File[] array = new File[files.size()];
+        files.toArray(array);
+        Arrays.sort(array, Comparator.comparingLong(File::lastModified));
+        return Arrays.asList(array);
+    }
+
+    public static List<File> getMostRecentFiles(List<File> files, int numHours) {
+        long cutOffMillis = System.currentTimeMillis() - (numHours * ONE_HOUR_MILLIS);
+
+        List<File> mostRecentPics = new ArrayList<>();
+        for (File f : files) {
+            long lastModifiedMillis = ImageUtils.getLastModifiedMillis(f);
+            if (lastModifiedMillis >= cutOffMillis) {
+                mostRecentPics.add(f);
+            }
+        }
+        return mostRecentPics;
     }
 
     public static File copyFile(File original) {
@@ -41,7 +78,7 @@ public class FileService {
     }
     
     public static File copyFile(File original, String toDir, String toName) {
-        FileService.ensureDirectoryExists(toDir);
+        FileUtils.ensureDirectoryExists(toDir);
 
         String filePath;
         try {
@@ -51,7 +88,7 @@ public class FileService {
                 filePath = toDir + toName;
             }
             File copy = new File(filePath);
-            FileUtils.copyFile(original, copy);
+            org.apache.commons.io.FileUtils.copyFile(original, copy);
             System.out.println("Copied file " + original.getName() + " to: " + copy.getAbsolutePath());
             return copy;
         } catch (IOException e) {
@@ -148,7 +185,7 @@ public class FileService {
     public static void writeToFile(List<String> textLines, String filePath) {
         File file = new File(filePath);
         try {
-            FileUtils.writeLines(file, UTF_8.toString(), textLines);
+            org.apache.commons.io.FileUtils.writeLines(file, UTF_8.toString(), textLines);
             System.out.println("Wrote to file: " + filePath);
         } catch (IOException e) {
         }

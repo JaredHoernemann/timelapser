@@ -7,40 +7,61 @@ import com.drew.metadata.file.FileSystemDirectory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-public class ImageUtil {
+public class ImageUtils {
 
     public static String DEFAULT_FORMAT = "hh:mma";
 
-    public static File timestampImage(File file) {
-        return timestampImage(file, DEFAULT_FORMAT);
+
+    public static File cropImage(File file) throws Exception{
+        BufferedImage bufferedImage = ImageIO.read(file);
+//        BufferedImage cropped = bufferedImage.getSubimage(0,400, 2560, 1440); // control
+        BufferedImage cropped = bufferedImage.getSubimage(2912,400, 2560, 1440); // BIOMANN
+        ImageIO.write(cropped, "JPG", file);
+        System.out.println("Cropped image: " + file.getAbsolutePath());
+        return file;
+
     }
 
-    public static File timestampImage(File file, String format) {
+    public static File writeTextToImage(File file, String text) {
         try {
-            long millis = getLastModifiedMillis(file);
-            String text = "Day " + calcDaysBetweenMillis(millis, 1642737276840L) + " - " + Utils.millisToDateStr(millis, format);
-
             BufferedImage bufferedImage = ImageIO.read(file);
             Graphics graphics = bufferedImage.getGraphics();
-            Font font = new Font("Arial", Font.BOLD, 48);
+            Font font = new Font("Arial", Font.BOLD, 144);
             graphics.setFont(font);
             graphics.setColor(Color.RED);
-            graphics.drawString(text, 25, 25);
+            graphics.drawString(text, 100, 100);
             graphics.dispose();
-            ImageIO.write(bufferedImage, "png", file);
-            System.out.println("Timestamped image: " + file.getName() + " -> " + text);
+            ImageIO.write(bufferedImage, "JPG", file);
+            System.out.println("Wrote text to image: " + file.getName() + " -> " + text);
             return file;
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    public static int calcMinutesBetweenMillis(long first, long second) {
+        long elapsed = Math.abs(first - second); //order of params is irrelevant
+        long millisInMinute = 1000 * 60;
+        int count = 0;
+        for (long x = elapsed; x >= millisInMinute; x -= millisInMinute) {
+            count++;
+        }
+        return count;
+    }
+
+    public static int calcHoursBetweenMillis(long first, long second) {
+        long elapsed = Math.abs(first - second); //order of params is irrelevant
+        long millisInHour = 1000 * 60 * 60;
+        int count = 0;
+        for (long x = elapsed; x >= millisInHour; x -= millisInHour) {
+            count++;
+        }
+        return count;
     }
 
     public static int calcDaysBetweenMillis(long first, long second) {
@@ -55,7 +76,7 @@ public class ImageUtil {
     }
 
 
-    private static long getLastModifiedMillis(File image) {
+    public static long getLastModifiedMillis(File image) {
         Metadata metadata = getMetaData(image);
         FileSystemDirectory directory = metadata.getFirstDirectoryOfType(FileSystemDirectory.class); //FileSystemDirectory contains Last Modified metadata
         Date date = directory.getDate(3); //type 3 = Last Modified Date

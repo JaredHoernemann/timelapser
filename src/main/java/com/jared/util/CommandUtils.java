@@ -52,7 +52,7 @@ public class CommandUtils {
         processBuilder.redirectErrorStream(true); //outputs errors and normal output to the same stream
         
         String filePath  = "target/command-logs/"  + INIT_MILLIS + "/" + System.currentTimeMillis() + "_" + logFile;
-        FileService.ensureFilePathExists(filePath);
+        FileUtils.ensureFilePathExists(filePath);
         processBuilder.redirectOutput(new File(filePath));
 
         System.out.println("Command: " + command);
