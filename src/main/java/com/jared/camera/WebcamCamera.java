@@ -2,7 +2,8 @@ package com.jared.camera;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.util.ImageUtils;
-import com.jared.util.FileUtils;
+import com.jared.app.Config;
+import com.jared.utils.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,10 +13,10 @@ import java.io.IOException;
 import java.util.Objects;
 
 
-public class WebcamService {
+public class WebcamCamera {
 
     private static final String DEFAULT_DIRECTORY = "target/webcam-captures/";
-    private static final Dimension RESOLUTION = new Dimension(1920, 1080);
+    private static final Dimension RESOLUTION = new Dimension(Config.getWebcamResolutionWidth(), Config.getWebcamResolutionHeight());
     private static Webcam webcam;
 
     private static void initWebcam() {

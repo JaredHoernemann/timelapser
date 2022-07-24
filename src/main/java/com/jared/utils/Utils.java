@@ -1,4 +1,4 @@
-package com.jared.util;
+package com.jared.utils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,6 +12,17 @@ public class Utils {
     private Utils() {
     }
 
+    public static int calcDaysBetweenMillis(long first, long second) {
+        long elapsed = Math.abs(first - second); //order of params is irrelevant
+        long millisInDay = 1000 * 60 * 60 * 24;
+
+        int count = 0;
+        for (long x = elapsed; x >= millisInDay; x -= millisInDay) {
+            count++;
+        }
+        return count;
+    }
+
     public static String millisToDateStr(long millis, String format) {
         Instant instant = Instant.ofEpochMilli(millis);
         ZoneId zoneId = ZoneId.systemDefault();
@@ -21,6 +32,26 @@ public class Utils {
         return ldt.format(formatter);
     }
 
+    public static String millisToPrettyDuration(long millis) {
+
+        // formula for conversion for
+        // milliseconds to minutes.
+        long minutes = (millis / 1000) / 60;
+
+        // formula for conversion for
+        // milliseconds to seconds
+        long seconds = (millis / 1000) % 60;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (minutes > 0) {
+            stringBuilder.append(minutes).append(" minutes and ");
+        }
+        stringBuilder.append(seconds).append(" seconds");
+
+        // Print the output
+        return stringBuilder.toString();
+    }
+
     /**
      * Causes thread to sleep for x number of minutes.
      *
@@ -28,7 +59,7 @@ public class Utils {
      */
     public static void sleepForMinutes(int minutes) {
         System.out.print("Sleeping for " + minutes + " minutes");
-        for (int x = 0; x < minutes * 30; x++) {
+        for (int x = 0; x < minutes * 30; x++) { //print dots every 2 seconds
             try {
                 if (x !=0) {  //skip printing the first dot
                     System.out.print(".");

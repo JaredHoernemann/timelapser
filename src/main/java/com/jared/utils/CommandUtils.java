@@ -1,4 +1,4 @@
-package com.jared.util;
+package com.jared.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
