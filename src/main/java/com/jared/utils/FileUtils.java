@@ -1,5 +1,9 @@
-package com.jared.util;
+package com.jared.utils;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.file.FileSystemDirectory;
 import com.google.common.base.Strings;
 
 import java.io.File;
@@ -59,7 +63,7 @@ public class FileUtils {
 
         List<File> mostRecentPics = new ArrayList<>();
         for (File f : files) {
-            long lastModifiedMillis = ImageUtils.getLastModifiedMillis(f);
+            long lastModifiedMillis = getLastModifiedMillis(f);
             if (lastModifiedMillis >= cutOffMillis) {
                 mostRecentPics.add(f);
             }
@@ -269,6 +273,23 @@ public class FileUtils {
             if (deleted) {
                 count++;
             }
+        }
+    }
+
+
+    public static long getLastModifiedMillis(File file) {
+        Metadata metadata = getMetaData(file);
+        FileSystemDirectory directory = metadata.getFirstDirectoryOfType(FileSystemDirectory.class); //FileSystemDirectory contains Last Modified metadata
+        Date date = directory.getDate(3); //type 3 = Last Modified Date
+        return date.getTime();
+    }
+
+    private static Metadata getMetaData(File image) {
+        try {
+            return ImageMetadataReader.readMetadata(image);
+        } catch (ImageProcessingException | IOException e) {
+            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.jared.util;
+package com.jared.utils;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -7,9 +7,9 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
-public class LoggerService {
+public class LogUtils {
 
-    private LoggerService(){}
+    private LogUtils(){}
 
     /**
      * Returns a {@link Logger} object with the name of the calling class set automatically.

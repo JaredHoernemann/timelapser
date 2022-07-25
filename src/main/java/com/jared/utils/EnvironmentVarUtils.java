@@ -1,4 +1,4 @@
-package com.jared.util;
+package com.jared.utils;
 
 
 import com.google.common.base.Strings;

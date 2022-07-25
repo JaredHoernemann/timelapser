@@ -1,8 +1,8 @@
 package com.jared;
 
 import com.jared.app.Config;
-import com.jared.util.FileUtils;
-import com.jared.util.TimelapseUtil;
+import com.jared.app.FrameManipulator;
+import com.jared.utils.TimelapseUtils;
 
 import java.io.File;
 import java.util.List;
@@ -10,10 +10,9 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-
-        List<File> dirOne = FileUtils.getAllFilesInDirectory(Config.getTimelapsePicturesDirectory());
-        List<File> files = FileUtils.getMostRecentFiles(FileUtils.filterOnlyPictures(dirOne), Config.getTimelapseNumHours());
-        TimelapseUtil.createTimelapse(files);
+        FrameManipulator modifier = FrameManipulator.create(Config.getTimelapsePicturesDirectory(), Config.getTimelapseNumHours());
+        List<File> files = modifier.manipulateFrames();
+        TimelapseUtils.createTimelapse(files);
     }
 }
 

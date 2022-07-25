@@ -1,7 +1,8 @@
 package com.jared.app;
 
 import com.google.common.base.Strings;
-import com.jared.util.FileUtils;
+import com.jared.utils.FileUtils;
+import org.bridj.SizeT;
 
 import java.io.*;
 import java.util.Properties;
@@ -21,8 +22,28 @@ public class Config {
         CONFIG = ConfigFile.getPropertiesFromFile();
     }
 
+    public static Boolean timestampImages() {
+        return Boolean.parseBoolean(getNonNullOrEmptyProperty(Keys.TIMESTAMP_IMAGES));
+    }
+
     public static Boolean cropImages() {
         return Boolean.parseBoolean(getNonNullOrEmptyProperty(Keys.CROP_IMAGES));
+    }
+
+    public static int getCropStartX() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.CROP_START_X));
+    }
+
+    public static int getCropStartY() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.CROP_START_Y));
+    }
+
+    public static int getCropWidthNumPixels() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.CROP_WIDTH_NUM_PIXELS));
+    }
+
+    public static int getCropHeightNumPixels() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.CROP_HEIGHT_NUM_PIXELS));
     }
 
     public static String getTimelapseResolution() {
@@ -31,6 +52,14 @@ public class Config {
 
     public static int getTimelapseFrameRate() {
         return Integer.parseInt(getNonNullOrEmptyProperty(Keys.TIMELAPSE_FRAME_RATE));
+    }
+
+    public static int getTimelapseResolutionWidth() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.TIMELAPSE_RES_WIDTH));
+    }
+
+    public static int getTimelapseResolutionHeight() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.TIMELAPSE_RES_HEIGHT));
     }
 
     public static String getTimelapseOutputDirectory() {
@@ -43,6 +72,22 @@ public class Config {
 
     public static int getTimelapseNumHours() {
         return Integer.parseInt(getNonNullOrEmptyProperty(Keys.TIMELAPSE_NUM_HOURS));
+    }
+
+    public static String getTimelapseFileName() {
+        return getNonNullOrEmptyProperty(Keys.TIMELAPSE_NAME);
+    }
+
+    public static int getWebcamResolutionHeight() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.WEBCAM_RES_HEIGHT));
+    }
+
+    public static int getWebcamResolutionWidth() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.WEBCAM_RES_WIDTH));
+    }
+
+    public static int getWebcamPictureIntervalMinutes() {
+        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.WEBCAM_PIC_INTERVAL_MINUTES));
     }
 
     private static String getNonNullOrEmptyProperty(String propertyKey) {
@@ -133,7 +178,17 @@ public class Config {
         static final String TIMELAPSE_PICS_DIR = "timelapsePicturesDirectory";
         static final String TIMELAPSE_FRAME_RATE = "timelapseFrameRate";
         static final String TIMELAPSE_RESOLUTION = "timelapseResolution";
+        static final String TIMELAPSE_RES_WIDTH = "timelapseResolutionWidth";
+        static final String TIMELAPSE_RES_HEIGHT = "timelapseResolutionHeight";
         static final String CROP_IMAGES = "cropImages";
-
+        static final String CROP_START_X = "cropStartX";
+        static final String CROP_START_Y = "cropStartY";
+        static final String CROP_WIDTH_NUM_PIXELS = "cropWidthNumPixels";
+        static final String CROP_HEIGHT_NUM_PIXELS = "cropHeightNumPixels";
+        static final String TIMESTAMP_IMAGES = "timestampImages";
+        static final String TIMELAPSE_NAME = "timelapseFileName";
+        static final String WEBCAM_RES_WIDTH = "webcamResolutionWidth";
+        static final String WEBCAM_RES_HEIGHT = "webcamResolutionHeight";
+        static final String WEBCAM_PIC_INTERVAL_MINUTES = "webcamPictureIntervalMinutes";
     }
 }
