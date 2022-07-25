@@ -17,7 +17,7 @@ public class CommandUtils {
      * @return The response String returned by the command.
      */
     public static String executeCommand(String command, boolean logOutput) {
-        System.out.println("Command: " + command);
+        System.out.println("Executed command: " + command);
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.redirectErrorStream(true); //outputs errors and normal output to the same stream
@@ -55,7 +55,7 @@ public class CommandUtils {
         FileUtils.ensureFilePathExists(filePath);
         processBuilder.redirectOutput(new File(filePath));
 
-        System.out.println("Command: " + command);
+        System.out.println("Executed command: " + command);
         processBuilder.command("cmd.exe", "/c", command);
 
         try {

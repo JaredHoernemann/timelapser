@@ -28,7 +28,7 @@ public class ImageUtils {
             graphics.drawString(text, 75, 75);
             graphics.dispose();
             ImageIO.write(bufferedImage, "JPG", file);
-            System.out.println("Wrote text to image: " + file.getName() + ": \"" + text + "\"");
+            System.out.println("Wrote text to " + file.getName() + ": \"" + text + "\"");
             return file;
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
