@@ -7,7 +7,7 @@ import com.jared.camera.WebcamCamera;
 import java.io.File;
 
 @SuppressWarnings("ALL")
-public class WebcamIntervalometer {
+public class Webcam {
 
     private static final String BASE_OUTPUT_DIR = System.getProperty("user.home") + "\\Timelapse\\";
     private static final int TAKE_PIC_INTERVAL_MINS = Config.getWebcamPictureIntervalMinutes();
