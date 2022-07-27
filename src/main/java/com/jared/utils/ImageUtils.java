@@ -1,6 +1,8 @@
 package com.jared.utils;
 
 
+import com.jared.app.Config;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,13 +24,13 @@ public class ImageUtils {
         try {
             BufferedImage bufferedImage = ImageIO.read(file);
             Graphics graphics = bufferedImage.getGraphics();
-            Font font = new Font("Arial", Font.BOLD, 48);
+            Font font = new Font("Arial", Font.BOLD, Config.getTimstampFontSize());
             graphics.setFont(font);
             graphics.setColor(Color.WHITE);
-            graphics.drawString(text, 75, 75);
+            graphics.drawString(text, Config.getTimestampPositionX(), Config.getTimestampPositionY());
             graphics.dispose();
             ImageIO.write(bufferedImage, "JPG", file);
-            System.out.println("Wrote text to image: " + file.getName() + ": \"" + text + "\"");
+            System.out.println("Wrote text to " + file.getName() + ": \"" + text + "\"");
             return file;
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());

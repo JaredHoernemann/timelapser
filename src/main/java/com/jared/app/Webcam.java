@@ -23,7 +23,6 @@ public class Webcam {
                 if (!ImageUtils.isLightOn(file)) {
                     System.out.println("Lights are off, deleting file: " + file.getName());
                     file.delete();
-
                 }
             } catch (IllegalStateException e) {
                 System.err.println("Error: Failed to take picture -> " + e.getMessage());

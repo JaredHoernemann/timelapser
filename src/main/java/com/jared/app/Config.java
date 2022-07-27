@@ -2,7 +2,6 @@ package com.jared.app;
 
 import com.google.common.base.Strings;
 import com.jared.utils.FileUtils;
-import org.bridj.SizeT;
 
 import java.io.*;
 import java.util.Properties;
@@ -70,8 +69,12 @@ public class Config {
         return getNonNullOrEmptyProperty(Keys.TIMELAPSE_PICS_DIR);
     }
 
-    public static int getTimelapseNumHours() {
-        return Integer.parseInt(getNonNullOrEmptyProperty(Keys.TIMELAPSE_NUM_HOURS));
+    public static Integer getTimelapseNumHours() {
+        String value = CONFIG.getProperty(Keys.TIMELAPSE_NUM_HOURS, null);
+        if (Strings.isNullOrEmpty(value)) {
+            return null;
+        }
+        return Integer.parseInt(value);
     }
 
     public static String getTimelapseFileName() {
@@ -88,6 +91,21 @@ public class Config {
 
     public static int getWebcamPictureIntervalMinutes() {
         return Integer.parseInt(getNonNullOrEmptyProperty(Keys.WEBCAM_PIC_INTERVAL_MINUTES));
+    }
+
+    public static int getTimstampFontSize() {
+        String value = CONFIG.getProperty(Keys.TIMESTAMP_FONT_SIZE, "48");
+        return Integer.parseInt(value);
+    }
+
+    public static int getTimestampPositionX() {
+        String value = CONFIG.getProperty(Keys.TIMESTAMP_POSITION_X, "75");
+        return Integer.parseInt(value);
+    }
+
+    public static int getTimestampPositionY() {
+        String value = CONFIG.getProperty(Keys.TIMESTAMP_Y_VALUE, "75");
+        return Integer.parseInt(value);
     }
 
     public static String getWebcamPicturesDirectory() {
@@ -195,5 +213,8 @@ public class Config {
         static final String WEBCAM_RES_HEIGHT = "webcamResolutionHeight";
         static final String WEBCAM_PIC_INTERVAL_MINUTES = "webcamPictureIntervalMinutes";
         static final String WEBCAM_PICS_DIR = "webcamPicturesDirectory";
+        static final String TIMESTAMP_FONT_SIZE = "timestampFontSize";
+        static final String TIMESTAMP_POSITION_X = "timestampPositionX";
+        static final String TIMESTAMP_Y_VALUE = "timestampPositionY";
     }
 }

@@ -7,11 +7,11 @@ import com.jared.utils.TimelapseUtils;
 import java.io.File;
 import java.util.List;
 
-public class Main {
+public class Timelapse {
 
     public static void main(String[] args) {
-        FrameManipulator modifier = FrameManipulator.create(Config.getTimelapsePicturesDirectory(), Config.getTimelapseNumHours());
-        List<File> files = modifier.manipulateFrames();
+        FrameManipulator frameManipulator = FrameManipulator.create(Config.getTimelapsePicturesDirectory());
+        List<File> files = frameManipulator.manipulateFrames();
         TimelapseUtils.createTimelapse(files);
     }
 }
