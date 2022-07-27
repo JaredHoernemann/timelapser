@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class WebcamCamera {
 
-    private static final String DEFAULT_DIRECTORY = "target/webcam-captures/";
+    private static final String PICTURES_DIR = Config.getWebcamPicturesDirectory();
     private static final Dimension RESOLUTION = new Dimension(Config.getWebcamResolutionWidth(), Config.getWebcamResolutionHeight());
     private static Webcam webcam;
 
@@ -31,7 +31,7 @@ public class WebcamCamera {
     }
 
     public static File takePicture() {
-        return takePicture(DEFAULT_DIRECTORY);
+        return takePicture(PICTURES_DIR);
     }
     
     public static File takePicture(String toDir) {
