@@ -6,13 +6,15 @@ import com.jared.utils.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class FrameManipulator {
 
     private static final String FORMAT = "%09d";
-    private final List<File> originalFrames;
+    private static final String PREVIEW_DIR = "target/frame-preview/";
+    private List<File> frames;
     private final long firstFrameMillis;
 
     private FrameManipulator(List<File> originalFiles) {
@@ -22,25 +24,51 @@ public class FrameManipulator {
             throw new IllegalStateException("List of pictures cannot be empty");
         }
 
-        this.originalFrames = FileUtils.sortFilesByLastModified(pictures);
-        this.firstFrameMillis = FileUtils.getLastModifiedMillis(this.originalFrames.get(0));
+        this.frames = FileUtils.sortFilesByLastModified(pictures);
+        this.firstFrameMillis = FileUtils.getLastModifiedMillis(this.frames.get(0));
+        setNumHoursToTimelapse(Config.getTimelapseNumHours());
+        System.out.println("Manipulating " + frames.size() + " frames");
     }
 
-    public static FrameManipulator create(String filesDir, int numHours) {
+    private void setNumHoursToTimelapse(Integer numHours) {
+        if (!Objects.isNull(numHours)) {
+            frames = FileUtils.getMostRecentFiles(frames, numHours);
+        }
+    }
+
+    public static FrameManipulator create(String filesDir) {
         List<File> listOfFiles = FileUtils.getAllFilesInDirectory(filesDir);
-        List<File> mostRecentPics = FileUtils.getMostRecentFiles(listOfFiles, numHours);
-        return new FrameManipulator(mostRecentPics);
+        return new FrameManipulator(listOfFiles);
+    }
+
+    public File createPreview() {
+        String dir = PREVIEW_DIR;
+        FileUtils.ensureDirectoryExists(dir);
+        String name = "preview.JPG";
+        File mostRecentFile = frames.get(frames.size() -1);
+        ManipulateFrameTask task = new ManipulateFrameTask(mostRecentFile, dir, name, firstFrameMillis);
+
+        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        try {
+            List<ManipulateFrameTask> temp = new ArrayList<>();
+            temp.add(task);
+            service.invokeAll(temp);
+            service.shutdown();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return FileUtils.getAllFilesInDirectory(dir).get(0);
     }
 
     public List<File> manipulateFrames() {
         long startMillis = System.currentTimeMillis();
 
         String tempDir = FileUtils.createTempDirectory("timelapse");
-        List<ModifyFrameTask> frameTasks = new ArrayList<>();
+        List<ManipulateFrameTask> frameTasks = new ArrayList<>();
         int count = 1;
-        for (File f : originalFrames) {
+        for (File f : frames) {
             String name = "frame-" + String.format(FORMAT, count) + ".JPG";
-            ModifyFrameTask task = new ModifyFrameTask(f, tempDir, name, firstFrameMillis);
+            ManipulateFrameTask task = new ManipulateFrameTask(f, tempDir, name, firstFrameMillis);
             frameTasks.add(task);
             count++;
         }

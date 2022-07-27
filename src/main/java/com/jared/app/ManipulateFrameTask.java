@@ -7,7 +7,7 @@ import com.jared.utils.Utils;
 import java.io.File;
 import java.util.concurrent.Callable;
 
-public class ModifyFrameTask implements Callable<File> {
+public class ManipulateFrameTask implements Callable<File> {
 
     private final File file;
     private final String toDir;
@@ -15,7 +15,7 @@ public class ModifyFrameTask implements Callable<File> {
     private final long firstFrameMillis;
     private final long frameMillis;
 
-    public ModifyFrameTask(File file, String toDir, String toName, long firstFrameMillis) {
+    public ManipulateFrameTask(File file, String toDir, String toName, long firstFrameMillis) {
         this.firstFrameMillis = firstFrameMillis;
         this.frameMillis = FileUtils.getLastModifiedMillis(file);
         this.file = file;
