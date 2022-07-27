@@ -27,7 +27,6 @@ public class FrameManipulator {
         this.frames = FileUtils.sortFilesByLastModified(pictures);
         this.firstFrameMillis = FileUtils.getLastModifiedMillis(this.frames.get(0));
         setNumHoursToTimelapse(Config.getTimelapseNumHours());
-        System.out.println("Manipulating " + frames.size() + " frames");
     }
 
     private void setNumHoursToTimelapse(Integer numHours) {
@@ -61,6 +60,7 @@ public class FrameManipulator {
     }
 
     public List<File> manipulateFrames() {
+        System.out.println("Manipulating " + frames.size() + " frames");
         long startMillis = System.currentTimeMillis();
 
         String tempDir = FileUtils.createTempDirectory("timelapse");
@@ -83,7 +83,6 @@ public class FrameManipulator {
 
         String duration = Utils.millisToPrettyDuration(System.currentTimeMillis() - startMillis);
         System.out.println("Frame manipulation took " + duration);
-
         return FileUtils.getAllFilesInDirectory(tempDir);
     }
 }
