@@ -90,6 +90,10 @@ public class Config {
         return Integer.parseInt(getNonNullOrEmptyProperty(Keys.WEBCAM_PIC_INTERVAL_MINUTES));
     }
 
+    public static String getWebcamPicturesDirectory() {
+        return getNonNullOrEmptyProperty(Keys.WEBCAM_PICS_DIR);
+    }
+
     private static String getNonNullOrEmptyProperty(String propertyKey) {
         String value = CONFIG.getProperty(propertyKey);
         if (Strings.isNullOrEmpty(value)) {
@@ -190,5 +194,6 @@ public class Config {
         static final String WEBCAM_RES_WIDTH = "webcamResolutionWidth";
         static final String WEBCAM_RES_HEIGHT = "webcamResolutionHeight";
         static final String WEBCAM_PIC_INTERVAL_MINUTES = "webcamPictureIntervalMinutes";
+        static final String WEBCAM_PICS_DIR = "webcamPicturesDirectory";
     }
 }
